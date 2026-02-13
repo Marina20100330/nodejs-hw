@@ -31,11 +31,11 @@ app.get("/notes", (req, res) => {
 });
 
 app.get("/notes/:noteId", (req, res) => {
-    const { noteId } = req.params;
-    res.status(200).json({
-        message: 'Retrieved note with ID: ${ noteId }'})
+  const { noteId } = req.params;
+  res.status(200).json({
+    message: `Retrieved note with ID: ${noteId}`  
   });
-
+});
 
 app.get("/test-error", (req, res) => {
   throw new Error('Simulated server error');
@@ -55,5 +55,4 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Server is running on port ${PORT}');
-});
+  console.log(`Server is running on port ${PORT}`); });
