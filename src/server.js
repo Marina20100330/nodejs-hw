@@ -24,25 +24,18 @@ app.use(
   }),
 );
 
-const notes = [
-  { id: '1', title: 'Первая заметка', content: 'Содержимое 1' },
-  { id: '2', title: 'Вторая заметка', content: 'Содержимое 2' },
-];
-
 app.get("/notes", (req, res) => {
-  res.status(200).json(notes);
+  res.status(200).json({
+    message: "Retrieved all notes"
+  });
 });
 
 app.get("/notes/:noteId", (req, res) => {
-  const { noteId } = req.params;
-  const note = notes.find(n => n.id === noteId);
-  
-  if (!note) {
-    return res.status(404).json({ message: 'Note not found' });
-  }
-  
-  res.status(200).json(note);
-});
+    const { noteId } = req.params;
+    res.status(200).json({
+        message: 'Retrieved note with ID: ${ noteId }'})
+  });
+
 
 app.get("/test-error", (req, res) => {
   throw new Error('Simulated server error');
@@ -57,8 +50,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   req.log.error(err.message);
   res.status(500).json({
-    message: 'Internal Server Error',
-    error: err.message,
+    message: err.message || 'Internal Server Error'
   });
 });
 
