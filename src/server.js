@@ -30,9 +30,9 @@ app.use(authRoutes);
 app.use(userRoutes);    
 app.use(notesRoutes);  
 
-app.use(errors());
-app.use(notFoundHandler);
-app.use(errorHandler);
+app.use(notFoundHandler);     
+app.use(errors());            
+app.use(errorHandler); 
 
 app.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);

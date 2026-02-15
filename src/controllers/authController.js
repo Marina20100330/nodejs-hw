@@ -13,8 +13,6 @@ import { sendEmail } from '../utils/sendMail.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-
 export const registerUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -35,6 +33,7 @@ export const registerUser = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const loginUser = async (req, res, next) => {
   try {
@@ -101,6 +100,7 @@ export const logoutUser = async (req, res, next) => {
   }
 };
 
+
 export const requestResetEmail = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -129,11 +129,16 @@ export const requestResetEmail = async (req, res, next) => {
       resetLink,
     });
 
-    await sendEmail({
-      to: user.email,
-      subject: 'Password Reset Request',
-      html,
-    });
+    try {
+      await sendEmail({
+        from: process.env.SMTP_FROM,
+        to: user.email,
+        subject: 'Password Reset Request',
+        html,
+      });
+    } catch (emailError) {
+      throw createHttpError(500, 'Failed to send the email, please try again later.');
+    }
 
     res.status(200).json({
       message: 'Password reset email sent successfully',
