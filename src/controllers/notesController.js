@@ -12,15 +12,15 @@ export const getAllNotes = async (req, res, next) => {
     }
 
     if (search) {
-     
       query = query.where({ $text: { $search: search } });
     }
 
     const skip = (page - 1) * perPage;
-    const totalNotes = await Note.countDocuments(query._conditions);
-    const notes = await query
-      .skip(skip)
-      .limit(Number(perPage));
+    
+    const [totalNotes, notes] = await Promise.all([
+      Note.countDocuments(query._conditions),
+      query.skip(skip).limit(Number(perPage))
+    ]);
 
     res.status(200).json({
       page: Number(page),
@@ -33,7 +33,6 @@ export const getAllNotes = async (req, res, next) => {
     next(error);
   }
 };
-
 export const getNoteById = async (req, res, next) => {
   try {
     const { noteId } = req.params;
