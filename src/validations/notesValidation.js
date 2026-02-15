@@ -1,9 +1,10 @@
 import Joi from 'joi';
+import mongoose from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
 
 const objectIdSchema = Joi.string().custom((value, helpers) => {
-  if (!value.match(/^[0-9a-fA-F]{24}$/)) {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
     return helpers.message('Invalid note id');
   }
   return value;
@@ -20,8 +21,7 @@ export const getAllNotesSchema = Joi.object({
 
 export const noteIdSchema = Joi.object({
   noteId: objectIdSchema.required(),
-})
-
+});
 
 export const createNoteSchema = Joi.object({
   title: Joi.string().min(1).required(),
@@ -29,10 +29,9 @@ export const createNoteSchema = Joi.object({
   tag: Joi.string().valid(...TAGS).optional(),
 });
 
-
 export const updateNoteSchema = Joi.object({
   noteId: objectIdSchema.required(),
   title: Joi.string().min(1).optional(),
   content: Joi.string().allow('').optional(),
   tag: Joi.string().valid(...TAGS).optional(),
-}).or('title', 'content', 'tag'); 
+}).or('title', 'content', 'tag');
