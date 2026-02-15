@@ -29,3 +29,24 @@ router.post('/auth/refresh', refreshUserSession);
 router.post('/auth/logout', logoutUser);
 
 export default router;
+import {
+  requestResetEmail,
+  resetPassword,
+} from '../controllers/authController.js';
+import {
+  requestResetEmailSchema,
+  resetPasswordSchema,
+} from '../validations/authValidation.js';
+
+
+router.post(
+  '/auth/request-reset-email',
+  celebrate({ body: requestResetEmailSchema }),
+  requestResetEmail
+);
+
+router.post(
+  '/auth/reset-password',
+  celebrate({ body: resetPasswordSchema }),
+  resetPassword
+);
